@@ -1,33 +1,36 @@
 package AnyEvent::Gearman::Worker;
-use Any::Moose;
+use Moo;
 
-use AnyEvent::Gearman::Types;
 use AnyEvent::Gearman::Worker::Connection;
 
-BEGIN { do { eval q[use MouseX::Foreign; 1] or die $@ } if any_moose eq 'Mouse' }
-
-extends any_moose('::Object'), 'Object::Event';
+extends 'Object::Event';
 
 has job_servers => (
     is       => 'ro',
-    isa      => 'AnyEvent::Gearman::Worker::Connections',
     required => 1,
-    coerce   => 1,
+    default  => sub { [] },
+    coerce   => sub {
+        for my $con (@{$_[0]}) {
+            next if ref($con) and $con->isa('AnyEvent::Gearman::Worker::Connection');
+            $con = AnyEvent::Gearman::Worker::Connection->new( hostspec => $con );
+        }
+        return $_[0];
+    },
 );
 
 has prefix => (
     is      => 'ro',
-    isa     => 'Str',
-    default => '',
+#    isa     => 'Str',
+    default => sub { '' },
 );
 
 has functions => (
     is      => 'ro',
-    isa     => 'HashRef',
+#    isa     => 'HashRef',
     default => sub { {} },
 );
 
-no Any::Moose;
+no Moo;
 
 sub register_function {
     my ($self, $func_name, $code) = @_;
@@ -54,7 +57,7 @@ sub unregister_function {
     delete $self->functions->{ $func_name };
 }
 
-__PACKAGE__->meta->make_immutable;
+1;
 
 __END__
 

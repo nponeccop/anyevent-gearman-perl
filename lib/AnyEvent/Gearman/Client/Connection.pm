@@ -1,10 +1,10 @@
 package AnyEvent::Gearman::Client::Connection;
-use Any::Moose;
+use Moo;
 use Scalar::Util 'weaken';
 
 extends 'AnyEvent::Gearman::Connection';
 
-no Any::Moose;
+no Moo;
 
 sub add_task {
     my ($self, $task, $on_complete, $on_error, $type) = @_;
@@ -142,7 +142,7 @@ sub process_packet_29 {         # WORK_WARNING
     goto \&process_work;
 }
 
-__PACKAGE__->meta->make_immutable;
+1;
 
 __END__
 

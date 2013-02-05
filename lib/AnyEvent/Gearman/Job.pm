@@ -1,9 +1,9 @@
 package AnyEvent::Gearman::Job;
-use Any::Moose;
+use Moo;
 
 extends 'AnyEvent::Gearman::Task';
 
-no Any::Moose;
+no Moo;
 
 sub complete {
     my ($self, $result) = @_;
@@ -30,7 +30,7 @@ sub warning {
     $self->event( on_warning => $warning );
 }
 
-__PACKAGE__->meta->make_immutable;
+1;
 
 __END__
 
