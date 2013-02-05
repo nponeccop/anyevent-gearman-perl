@@ -1,5 +1,5 @@
 package AnyEvent::Gearman::Worker::Connection;
-use Any::Moose;
+use Moo;
 use Scalar::Util 'weaken';
 require bytes;
 
@@ -10,11 +10,11 @@ extends 'AnyEvent::Gearman::Connection';
 
 has grabbing => (
     is      => 'rw',
-    isa     => 'Bool',
-    default => 0,
+#    isa     => 'Bool',
+    default => sub { 0 },
 );
 
-no Any::Moose;
+no Moo;
 
 sub request {
     my ($self, $type, $args) = @_;
@@ -142,7 +142,7 @@ sub work {
     $cb->($job);
 }
 
-__PACKAGE__->meta->make_immutable;
+1;
 
 __END__
 

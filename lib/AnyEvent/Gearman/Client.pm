@@ -1,24 +1,29 @@
 package AnyEvent::Gearman::Client;
-use Any::Moose;
+use Moo;
 
-use AnyEvent::Gearman::Types;
 use AnyEvent::Gearman::Task;
 use AnyEvent::Gearman::Client::Connection;
 
 has job_servers => (
     is       => 'rw',
-    isa      => 'AnyEvent::Gearman::Client::Connections',
     required => 1,
-    coerce   => 1,
+    default  => sub { [] },
+    coerce   => sub {
+        for my $con (@{$_[0]}) {
+            next if ref($con) and $con->isa('AnyEvent::Gearman::Client::Connection');
+            $con = AnyEvent::Gearman::Client::Connection->new( hostspec => $con );
+        }
+        return $_[0];
+    },
 );
 
 has prefix => (
     is      => 'rw',
-    isa     => 'Str',
-    default => '',
+#    isa     => 'Str',
+    default => sub { '' },
 );
 
-no Any::Moose;
+no Moo;
 
 sub add_task {
     my $self = shift;
@@ -70,7 +75,7 @@ sub _add_task {
     $task;
 }
 
-__PACKAGE__->meta->make_immutable;
+1;
 
 __END__
 
