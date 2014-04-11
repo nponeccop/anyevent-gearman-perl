@@ -48,7 +48,7 @@ sub register_function {
         if $self->functions->{ $func_name };
 
     for my $js (@{ $self->job_servers }) {
-        $js->context($self) unless $js->context;
+        $js->_set_context($self) unless $js->has_context;
         $js->register_function( $func_name );
     }
 
@@ -59,7 +59,7 @@ sub unregister_function {
     my ($self, $func_name) = @_;
 
     for my $js (@{ $self->job_servers }) {
-        $js->context($self) unless $js->context;
+        $js->_set_context($self) unless $js->has_context;
         $js->unregister_function( $func_name );
     }
 }
