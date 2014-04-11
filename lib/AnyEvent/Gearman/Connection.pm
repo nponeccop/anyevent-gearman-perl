@@ -30,6 +30,7 @@ has context => (
     is        => 'rwp',
     isa       => Object,
     weak_ref  => 1,
+    predicate => 1,
 );
 
 has handler => (
