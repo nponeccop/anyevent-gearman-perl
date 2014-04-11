@@ -1,10 +1,10 @@
 package AnyEvent::Gearman::Client::Connection;
-use Moo;
+
 use Scalar::Util 'weaken';
 
+use Moo;
 extends 'AnyEvent::Gearman::Connection';
-
-no Moo;
+use namespace::clean;
 
 sub add_task {
     my ($self, $task, $on_complete, $on_error, $type) = @_;
