@@ -50,6 +50,8 @@ sub unregister_function {
         $js->context($self) unless $js->context;
         $js->unregister_function( $func_name );
     }
+
+    delete $self->functions->{ $func_name };
 }
 
 __PACKAGE__->meta->make_immutable;
