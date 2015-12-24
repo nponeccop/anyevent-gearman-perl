@@ -12,6 +12,8 @@ Download it, unpack it, then build it as per the usual:
     % perl Makefile.PL
     % make && make test
 
+Make sure you have `Module::Install` and `Module::Install::AuthorTests` dependencies installed, as well as other prerequisites the build asks for.
+
 Then install it:
 
     % make install
