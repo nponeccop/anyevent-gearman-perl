@@ -15,13 +15,10 @@ test_requires 'Test::Deep';
 test_requires 'Test::Base';
 test_requires 'Test::TCP' => '0.08';
 
-use_test_base;
-
 tests('t/*.t');
 author_tests('xt');
 
 auto_include;
-auto_set_repository;
 
 if (author_context) {
     # gfx++
