@@ -68,7 +68,7 @@ sub BUILD {
     my $self = shift;
 
     # parse hostspec
-    my ($host, $service) = parse_hostport $self->hostspec;
+    my ($host, $service) = parse_hostport $self->hostspec, 4730;
     unless (defined $host) {
         $host    = $self->hostspec;
         $service = 4730;
