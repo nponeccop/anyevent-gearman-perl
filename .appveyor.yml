@@ -1,0 +1,13 @@
+skip_tags: true
+cache:
+  - C:\strawberry\perl\site
+install:
+  - if not exist "C:\strawberry" cinst strawberryperl
+  - set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;%PATH%
+  - cd C:\projects\%APPVEYOR_PROJECT_NAME%
+  - cpanm NML/Danga-Socket-1.62-TRIAL.tar.gz
+  - cpanm Module::Install::AuthorTests Test::Spelling Test::Pod::Coverage Gearman::Worker Gearman::Server
+  - cpanm --installdeps .
+build_script:
+  - perl Makefile.PL
+  - gmake test
