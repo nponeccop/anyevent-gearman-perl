@@ -11,3 +11,4 @@ KAYAC
 AnyEvent
 gearman
 Melo
+Str
