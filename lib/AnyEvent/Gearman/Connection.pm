@@ -69,10 +69,6 @@ sub BUILD {
 
     # parse hostspec
     my ($host, $service) = parse_hostport $self->hostspec, 4730;
-    unless (defined $host) {
-        $host    = $self->hostspec;
-        $service = 4730;
-    }
 
     unless (defined($host) && defined($service)) {
         die sprintf('Failed to parse hostspec: "%s"', $self->hostspec);
