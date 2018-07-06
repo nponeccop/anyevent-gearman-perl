@@ -1,8 +1,8 @@
 environment:
   matrix:
    - STRAWBERRY_VERSION: 5.28.0.1
-   - STRAWBERRY_VERSION: 5.24.0.1
-   - STRAWBERRY_VERSION: 5.20.3.3
+#   - STRAWBERRY_VERSION: 5.24.0.1
+#   - STRAWBERRY_VERSION: 5.20.3.3
 
 #  Below are some other values for STRAWBERRY_VERSION
 #  some versions require --checksum due to packaging errors
@@ -23,6 +23,9 @@ install:
 # - tar and gzip for make dist
   - where git tar gzip
   - cinst strawberryperl --version %STRAWBERRY_VERSION%%STRAWBERRY_CHECKSUM%
+  - ps: Start-FileDownload 'https://github.com/nponeccop/perl-par-bootstrap/releases/download/v0.0.4/pars-runtime-0.0.4.zip'
+# we need to do 7z early while it's in the PATH
+  - 7z x pars-runtime-0.0.4.zip
   - refreshenv
 # Note that the old path is completely thrown away
 # While perl is in path after refreshenv, the path is polluted by other utilities
@@ -42,12 +45,14 @@ install:
   - set PERL_MM_USE_DEFAULT=1
   - set NONINTERACTIVE_TESTING=1
   - set PERL_MM_NONINTERACTIVE=1
+  - perl setconfig.pl
+  - perl -e "use PAR { repository => 'runtime', install => 1, dependencies => 1 }; use PAR::Repository; use CPANPLUS::Dist::PAR; use Function::Parameters; use MetaCPAN::Client; 1;"
 # Some modules require the UTF-8 locale, and apparently each line is run in its
 # isolated subshell so we need to change the locale every time. If we remove the 65001 and run
 # chcp without parameter, we can see that locale is 437 instead of 65001 which means
 # some version of 8-bit European charset instead of UTF-8 required by some modules of
 # Japanese origin
-  - chcp 65001 && cpanm NML/Danga-Socket-1.62_01-TRIAL.tar.gz NML/Proc-Guard-0.07_01.tar.gz
+  - chcp 65001 && cpanp i NML/Danga-Socket-1.62_01-TRIAL.tar.gz NML/Proc-Guard-0.07_01.tar.gz
 # Gearman-Server fails tests under Windows
 # and AnyEvent::Gearman fails tests too if Gearman::Server is installed
 # without testing
@@ -59,6 +64,23 @@ install:
 # With the right tools and/or metadata probably only the (3) can be eliminated
 # We attempt to test the deps to maximum extent possible to ensure that
 # they are really working on Windows
-  - chcp 65001 && cpanm prefork Module::Install::ExtraTests Module::Install::AuthorTests Module::Install::TestBase Module::Install::Repository Test::Spelling Test::Pod::Coverage Test::TCP MouseX::Types Mouse Exporter::AutoClean Gearman::Util Gearman::Worker
+  - chcp 65001 && cpanp i prefork Module::Install::ExtraTests Module::Install::AuthorTests Module::Install::TestBase Module::Install::Repository Test::Spelling Test::Pod::Coverage Test::TCP MouseX::Types Mouse Exporter::AutoClean Gearman::Util Gearman::Worker
 build_script:
-  - chcp 65001 && cpanm --test-only -v .
+  - perl Makefile.PL
+  - gmake distcheck
+  - gmake dist
+  - for %%f in (AnyEvent-Gearman-*.tar.gz) do cpanp i %%f
+  - perl rundeps.pl AnyEvent-Gearman
+  - parrepo create -r PARs\build
+  - parrepo inject -r PARS\build --file "%USERPROFILE%\.cpanplus\%STRAWBERRY_CONFIG_VERSION%\dist\PAR\*.par"
+  - xcopy %USERPROFILE%\.cpanplus\install-logs install-logs\
+artifacts:
+  - path: PARs\build
+    name: pars_build
+    type: zip
+  - path: PARs\runtime
+    name: pars_runtime
+    type: zip
+  - path: install-logs
+    name: install-logs
+    type: zip

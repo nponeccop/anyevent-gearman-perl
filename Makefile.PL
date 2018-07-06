@@ -25,7 +25,7 @@ if (author_context) {
     # repeat testing
     # see also ExtUtils::MM_Any::test_via_harness()
     my $test_moose = q{$(FULLPERLRUN) -MExtUtils::Command::MM -e}
-                    .q{ "do 't/force-moose.pl'; }
+                    .q{ "do './t/force-moose.pl'; }
                     .q{test_harness($(TEST_VERBOSE), '$(INST_LIB)', '$(INST_ARCHLIB)')"}
                     .q{ $(TEST_FILES)} . "\n";
 
