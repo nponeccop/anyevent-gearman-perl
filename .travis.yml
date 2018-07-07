@@ -9,4 +9,8 @@ perl:
 before_install:
   - sudo apt-get update -q
   - sudo apt-get install -y aspell
-  - cpanm Module::Install::AuthorTests Module::Install::TestBase Gearman::Server Gearman::Worker Test::Spelling Test::Pod::Coverage
+  - cpanm --quiet --notest Module::Install::AuthorTests Module::Install::TestBase Module::Install::Repository Gearman::Server Gearman::Worker Test::Spelling Test::Pod::Coverage
+script:
+  - cpanm -v --test-only .
+  - make dist
+  - cpanm AnyEvent-Gearman-*.tar.gz
