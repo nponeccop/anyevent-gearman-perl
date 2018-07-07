@@ -9,4 +9,4 @@ perl:
 before_install:
   - sudo apt-get update -q
   - sudo apt-get install -y aspell
-  - cpanm Module::Install::AuthorTests Gearman::Server Gearman::Worker Test::Spelling Test::Pod::Coverage
+  - cpanm Module::Install::AuthorTests Module::Install::TestBase Gearman::Server Gearman::Worker Test::Spelling Test::Pod::Coverage

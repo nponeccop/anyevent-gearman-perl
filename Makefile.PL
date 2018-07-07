@@ -9,15 +9,15 @@ requires 'MouseX::Foreign';
 requires 'Object::Event'     => '1.0';
 requires 'Object::Container' => '0.03002';
 
-test_requires 'Test::More' => '0.92';
 test_requires 'Test::Exception';
 test_requires 'Test::Deep';
-test_requires 'Test::Base';
 test_requires 'Test::TCP' => '0.08';
 
 tests('t/*.t');
 author_tests('xt');
 
+use_test_base;
+auto_set_repository;
 auto_include;
 
 if (author_context) {

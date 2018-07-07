@@ -34,7 +34,7 @@ lib/AnyEvent/Gearman/Worker/Connection.pm
 LICENSE
 Makefile.PL
 MANIFEST			This list of files
-META.yml
+META.json
 README
 t/00_compile.t
 t/01_api.t

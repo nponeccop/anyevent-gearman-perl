@@ -13,3 +13,6 @@
 ^\.git/
 ^\.shipit$
 \.gitignore$
+\.appveyor.yml
+\.travis.yml
+^MYMETA.*
