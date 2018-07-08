@@ -1,13 +1,37 @@
 skip_tags: true
 cache:
-  - C:\strawberry\perl\site
 install:
-  - if not exist "C:\strawberry" cinst strawberryperl
-  - set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;%PATH%
-  - cd C:\projects\%APPVEYOR_PROJECT_NAME%
-  - cpanm NML/Danga-Socket-1.62-TRIAL.tar.gz
-  - cpanm Module::Install::AuthorTests Test::Spelling Test::Pod::Coverage Gearman::Worker Gearman::Server
-  - cpanm --installdeps .
+  - where git
+  - cinst strawberryperl
+  - refreshenv
+# Note that the old path is completely thrown away
+# While perl is in path after refreshenv, the path is polluted by other utilities
+# so various tools become misconfigured, such as an incorrect make variant is used
+# instead of gmake
+# We need git in path for Module::Install::Repository plugin
+# in AnyEvent-Gearman's Makefile.pl to work
+  - set BP=c:\strawberry
+  - set PP=%BP%\perl
+  - path %SystemRoot%\system32;%PP%\site\bin;%PP%\vendor\bin;%PP%\bin;%BP%\c\bin;C:\Program Files\Git\cmd
+# This is to ensure that there is a fatal error instead of a warning if git is not available
+  - git --version
+# Some modules require the UTF-8 locale, and apparently each line is run in its
+# isolated subshell so we need to change the locale every time. If we remove the 65001 and run
+# chcp without parameter, we can see that locale is 437 instead of 65001 which means
+# some version of 8-bit European charset instead of UTF-8 required by some modules of
+# Japanese origin
+  - chcp 65001 && cpanm NML/Danga-Socket-1.62-TRIAL.tar.gz NML/Proc-Guard-0.07_01.tar.gz Gearman::Util
+# Gearman-Server fails tests under Windows
+# and AnyEvent::Gearman fails tests too if Gearman::Server is installed
+# without testing
+# - cpanm --notest Gearman::Server
+# The distributions here are from 3 categories:
+# 1. Optional test dependencies of AnyEvent-Gearman's dependencies
+# 2. Optional test dependencies of AnyEvent-Gearman itself
+# 3. Mandatory author dependencies of AnyEvent-Gearman
+# With the right tools and/or metadata probably only the (3) can be eliminated
+# We attempt to test the deps to maximum extent possible to ensure that
+# they are really working on Windows
+  - chcp 65001 && cpanm prefork Module::Install::ExtraTests Module::Install::AuthorTests Module::Install::TestBase Module::Install::Repository Test::Spelling Test::Pod::Coverage Test::TCP MouseX::Types Mouse Exporter::AutoClean Test::Simple Gearman::Worker
 build_script:
-  - perl Makefile.PL
-  - gmake test
+  - chcp 65001 && cpanm --testonly -v .
