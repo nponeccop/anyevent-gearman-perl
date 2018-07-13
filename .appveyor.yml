@@ -21,11 +21,11 @@ install:
 # we need
 # - git for Module::Install::Repository
 # - tar and gzip for make dist
-  - where git tar gzip
+  - where git tar gzip 7z appveyor
   - cinst strawberryperl --version %STRAWBERRY_VERSION%%STRAWBERRY_CHECKSUM%
-  - ps: Start-FileDownload 'https://github.com/nponeccop/perl-par-bootstrap/releases/download/v0.0.4/pars-runtime-0.0.4.zip'
+  - ps: Start-FileDownload "https://github.com/nponeccop/perl-par-bootstrap/releases/download/v0.0.5/pars-runtime-0.0.5-${env:STRAWBERRY_CONFIG_VERSION}.zip"
 # we need to do 7z early while it's in the PATH
-  - 7z x pars-runtime-0.0.4.zip
+  - 7z x pars-runtime-0.0.5-%STRAWBERRY_CONFIG_VERSION%.zip
   - refreshenv
 # Note that the old path is completely thrown away
 # While perl is in path after refreshenv, the path is polluted by other utilities
@@ -34,7 +34,7 @@ install:
 # instead of gmake
   - set BP=c:\strawberry
   - set PP=%BP%\perl
-  - path %SystemRoot%\system32;%PP%\site\bin;%PP%\vendor\bin;%PP%\bin;%BP%\c\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\usr\bin;
+  - path %SystemRoot%\system32;%PP%\site\bin;%PP%\vendor\bin;%PP%\bin;%BP%\c\bin;C:\Program Files\Git\cmd;C:\Program Files\Git\usr\bin;C:\Program Files\AppVeyor\BuildAgent;C:\Program Files\7-Zip
   - FOR /F %%I IN ('perl -MConfig -e "print $Config{version};"') DO SET STRAWBERRY_CONFIG_VERSION=%%I
 # ' # this line with an apostrophe is needed to fix broken highlighing in vim
 # Many tools use the version from Config.pm which is different
@@ -65,10 +65,11 @@ install:
 # We attempt to test the deps to maximum extent possible to ensure that
 # they are really working on Windows
   - chcp 65001 && cpanp i prefork Module::Install::ExtraTests Module::Install::AuthorTests Module::Install::TestBase Module::Install::Repository Test::Spelling Test::Pod::Coverage Test::TCP MouseX::Types Mouse Exporter::AutoClean Gearman::Util Gearman::Worker
+  - chcp 65001 && cpanp s selfupdate core
 build_script:
   - perl Makefile.PL
-  - gmake distcheck
-  - gmake dist
+  - gmake distcheck || dmake discheck
+  - gmake dist || dmake dist
   - for %%f in (AnyEvent-Gearman-*.tar.gz) do cpanp i %%f
   - perl rundeps.pl AnyEvent-Gearman
   - parrepo create -r PARs\build
