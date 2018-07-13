@@ -65,12 +65,16 @@ install:
 # We attempt to test the deps to maximum extent possible to ensure that
 # they are really working on Windows
   - chcp 65001 && cpanp i prefork Module::Install::ExtraTests Module::Install::AuthorTests Module::Install::TestBase Module::Install::Repository Test::Spelling Test::Pod::Coverage Test::TCP MouseX::Types Mouse Exporter::AutoClean Gearman::Util Gearman::Worker
+  - perl deps.pl  
   - chcp 65001 && cpanp s selfupdate core
 build_script:
+  - perl -MCPANPLUS::Configure -e "print CPANPLUS::Configure->new->get_program('make')"
   - perl Makefile.PL
   - gmake distcheck || dmake discheck
   - gmake dist || dmake dist
-  - for %%f in (AnyEvent-Gearman-*.tar.gz) do cpanp i %%f
+  - chcp 65001 && for %%f in (AnyEvent-Gearman-*.tar.gz) do echo cpan2dist --format CPANPLUS::Dist::PAR --archive %%f
+  - chcp 65001 && for %%f in (AnyEvent-Gearman-*.tar.gz) do cpan2dist --format CPANPLUS::Dist::PAR --archive %%f
+  - dir /b
   - perl rundeps.pl AnyEvent-Gearman
   - parrepo create -r PARs\build
   - parrepo inject -r PARS\build --file "%USERPROFILE%\.cpanplus\%STRAWBERRY_CONFIG_VERSION%\dist\PAR\*.par"
