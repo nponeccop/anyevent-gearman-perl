@@ -1,7 +1,8 @@
 environment:
   matrix:
    - STRAWBERRY_VERSION: 5.28.0.1
-#   - STRAWBERRY_VERSION: 5.24.0.1
+   - STRAWBERRY_VERSION: 5.24.0.1
+# we don't have binary PARs for 5.20.3 yet
 #   - STRAWBERRY_VERSION: 5.20.3.3
 
 #  Below are some other values for STRAWBERRY_VERSION
@@ -19,13 +20,12 @@ cache:
 install:
 # This is to sanitize PATH
 # we need
+# - 7z for par-bootstrap (not needed in the main branch)
+# - appveyour for pushing artifacts (not used now)
 # - git for Module::Install::Repository
 # - tar and gzip for make dist
   - where git tar gzip 7z appveyor
   - cinst strawberryperl --version %STRAWBERRY_VERSION%%STRAWBERRY_CHECKSUM%
-  - ps: Start-FileDownload "https://github.com/nponeccop/perl-par-bootstrap/releases/download/v0.0.5/pars-runtime-0.0.5-${env:STRAWBERRY_CONFIG_VERSION}.zip"
-# we need to do 7z early while it's in the PATH
-  - 7z x pars-runtime-0.0.5-%STRAWBERRY_CONFIG_VERSION%.zip
   - refreshenv
 # Note that the old path is completely thrown away
 # While perl is in path after refreshenv, the path is polluted by other utilities
@@ -45,6 +45,9 @@ install:
   - set PERL_MM_USE_DEFAULT=1
   - set NONINTERACTIVE_TESTING=1
   - set PERL_MM_NONINTERACTIVE=1
+  - ps: Start-FileDownload "https://github.com/nponeccop/perl-par-bootstrap/releases/download/v0.0.5/pars-runtime-0.0.5-${env:STRAWBERRY_CONFIG_VERSION}.zip"
+# we need to do 7z early while it's in the PATH
+  - 7z x pars-runtime-0.0.5-%STRAWBERRY_CONFIG_VERSION%.zip
   - perl setconfig.pl
   - perl -e "use PAR { repository => 'runtime', install => 1, dependencies => 1 }; use PAR::Repository; use CPANPLUS::Dist::PAR; use Function::Parameters; use MetaCPAN::Client; 1;"
 # Some modules require the UTF-8 locale, and apparently each line is run in its
@@ -65,9 +68,9 @@ install:
 # We attempt to test the deps to maximum extent possible to ensure that
 # they are really working on Windows
   - chcp 65001 && cpanp i prefork Module::Install::ExtraTests Module::Install::AuthorTests Module::Install::TestBase Module::Install::Repository Test::Spelling Test::Pod::Coverage Test::TCP MouseX::Types Mouse Exporter::AutoClean Gearman::Util Gearman::Worker
-  - perl deps.pl  
   - chcp 65001 && cpanp s selfupdate core
 build_script:
+  - perl deps.pl
   - perl -MCPANPLUS::Configure -e "print CPANPLUS::Configure->new->get_program('make')"
   - perl Makefile.PL
   - gmake distcheck || dmake discheck
