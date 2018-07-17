@@ -47,7 +47,7 @@ install:
 # chcp without parameter, we can see that locale is 437 instead of 65001 which means
 # some version of 8-bit European charset instead of UTF-8 required by some modules of
 # Japanese origin
-  - chcp 65001 && cpanm NML/Danga-Socket-1.62-TRIAL.tar.gz NML/Proc-Guard-0.07_01.tar.gz Gearman::Util
+  - chcp 65001 && cpanm Test::Simple NML/Danga-Socket-1.62_01-TRIAL.tar.gz NML/Proc-Guard-0.07_01.tar.gz
 # Gearman-Server fails tests under Windows
 # and AnyEvent::Gearman fails tests too if Gearman::Server is installed
 # without testing
@@ -59,6 +59,6 @@ install:
 # With the right tools and/or metadata probably only the (3) can be eliminated
 # We attempt to test the deps to maximum extent possible to ensure that
 # they are really working on Windows
-  - chcp 65001 && cpanm prefork Module::Install::ExtraTests Module::Install::AuthorTests Module::Install::TestBase Module::Install::Repository Test::Spelling Test::Pod::Coverage Test::TCP MouseX::Types Mouse Exporter::AutoClean Test::Simple Gearman::Worker
+  - chcp 65001 && cpanm prefork Module::Install::ExtraTests Module::Install::AuthorTests Module::Install::TestBase Module::Install::Repository Test::Spelling Test::Pod::Coverage Test::TCP MouseX::Types Mouse Exporter::AutoClean Gearman::Util Gearman::Worker
 build_script:
   - chcp 65001 && cpanm --test-only -v .
