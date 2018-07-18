@@ -1,68 +1,74 @@
 package AnyEvent::Gearman::Connection;
-use Any::Moose;
-use Scalar::Util 'weaken';
 
+use Scalar::Util 'weaken';
+use Types::Standard qw/ ArrayRef HashRef InstanceOf Int Object Str /;
 use AnyEvent::Socket;
 use AnyEvent::Handle;
 
+use Moo;
+use namespace::clean;
+
+# Attributes
+
 has hostspec => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => Str,
     required => 1,
 );
 
 has _host => (
     is  => 'rw',
-    isa => 'Str',
+    isa => Str,
 );
 
 has _port => (
     is  => 'rw',
-    isa => 'Int | Str',
+    isa => Int | Str,
 );
 
 has context => (
-    is       => 'rw',
-    isa      => 'Object',
-    weak_ref => 1,
+    is        => 'rwp',
+    isa       => Object,
+    weak_ref  => 1,
+    predicate => 1,
 );
 
 has handler => (
     is      => 'rw',
-    isa     => 'Maybe[AnyEvent::Handle]',
-    clearer => 'clear_handler',
+    isa     => InstanceOf['AnyEvent::Handle'],
+    clearer => 1,
 );
 
 has on_connect_callbacks => (
     is      => 'rw',
-    isa     => 'ArrayRef',
+    isa     => ArrayRef,
     default => sub { [] },
 );
 
 has dead_time => (
     is      => 'rw',
-    isa     => 'Int',
+    isa     => Int,
     default => 0,
 );
 
 has _need_handle => (
     is      => 'rw',
-    isa     => 'ArrayRef',
+    isa     => ArrayRef,
     default => sub { [] },
 );
 
 has _job_handles => (
     is      => 'rw',
-    isa     => 'HashRef',
+    isa     => HashRef,
     default => sub { {} },
 );
 
 has _con_guard => (
     is  => 'rw',
-    isa => 'Object',
+    isa => Object,
 );
 
-no Any::Moose;
+# Constructors
 
 sub BUILD {
     my $self = shift;
@@ -77,6 +83,8 @@ sub BUILD {
     $self->_host( $host );
     $self->_port( $service );
 }
+
+# Methods
 
 sub connect {
     my ($self) = @_;
@@ -171,7 +179,7 @@ sub process_packet {
     weaken $self;
 }
 
-__PACKAGE__->meta->make_immutable;
+1;
 
 __END__
 

@@ -1,43 +1,42 @@
 package AnyEvent::Gearman::Task;
-use Any::Moose;
 
 use AnyEvent::Gearman::Constants;
+use Types::Standard qw/ CodeRef InstanceOf Str /;
 
-BEGIN { do { eval q[use MouseX::Foreign; 1] or die $@ } if any_moose eq 'Mouse' }
-
-extends any_moose('::Object'), 'Object::Event';
+use Moo;
+extends 'Object::Event';
+use namespace::clean;
 
 has function => (
-    is       => 'rw',
-    isa      => 'Str',
+    is       => 'ro',
+    isa      => Str,
     required => 1,
 );
 
 has workload => (
-    is       => 'rw',
-    isa      => 'Str',
+    is       => 'ro',
+    isa      => Str,
     required => 1,
 );
 
 has unique => (
-    is      => 'rw',
-    isa     => 'Str',
+    is      => 'ro',
+    isa     => Str,
     default => '',
 );
 
 has job_handle => (
-    is      => 'rw',
-    isa     => 'Str',
+    is      => 'rwp',
+    isa     => Str,
     default => '',
 );
 
 has [qw/on_created on_data on_complete on_fail on_status on_warning/] => (
-    is      => 'rw',
-    isa     => 'CodeRef',
+    is      => 'ro',
+    isa     => CodeRef,
     default => sub { sub {} },
 );
 
-no Any::Moose;
 
 sub BUILDARGS {
     my ($self, $function, $workload, %params) = @_;
@@ -79,7 +78,7 @@ sub pack_option_req {
     "\0REQ" . pack('NN', OPTION_REQ, length($option)) . $option;
 }
 
-__PACKAGE__->meta->make_immutable;
+1;
 
 __END__
 

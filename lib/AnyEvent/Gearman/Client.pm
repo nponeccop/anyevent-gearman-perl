@@ -1,34 +1,50 @@
 package AnyEvent::Gearman::Client;
-use Any::Moose;
 
-use AnyEvent::Gearman::Types;
 use AnyEvent::Gearman::Task;
 use AnyEvent::Gearman::Client::Connection;
+use Types::Standard qw/ ArrayRef Str /;
+use Type::Utils qw/ class_type /;
+
+use Moo;
+use namespace::clean;
+
+# Type definitions
+
+my $Connection = class_type {
+    class => 'AnyEvent::Gearman::Client::Connection'
+};
+
+my $JobServers = ArrayRef[
+    $Connection->plus_coercions(Str, q{
+        AnyEvent::Gearman::Client::Connection->new(hostspec => $_)
+    })
+];
+
+# Public attributes
 
 has job_servers => (
     is       => 'rw',
-    isa      => 'AnyEvent::Gearman::Client::Connections',
+    isa      => $JobServers,
+    coerce   => $JobServers->coercion,
     required => 1,
-    coerce   => 1,
 );
 
 has prefix => (
     is      => 'rw',
-    isa     => 'Str',
+    isa     => Str,
     default => '',
 );
 
-no Any::Moose;
 
 sub add_task {
     my $self = shift;
-    
+
     return $self->_add_task('', @_)
 }
 
 sub add_task_bg {
     my $self = shift;
-    
+
     return $self->_add_task('bg', @_)
 }
 
@@ -36,7 +52,7 @@ sub _add_task {
     my ($self, $type, $function, $workload, %cb) = @_;
 
     $function = $self->prefix . "\t" . $function
-        if $self->prefix;
+        if length $self->prefix;
 
     my $task = AnyEvent::Gearman::Task->new( $function, $workload, %cb );
 
@@ -61,7 +77,7 @@ sub _add_task {
 
             # on error
             $retry,
-            
+
             # task type
             $type,
         );
@@ -70,7 +86,7 @@ sub _add_task {
     $task;
 }
 
-__PACKAGE__->meta->make_immutable;
+1;
 
 __END__
 
@@ -83,12 +99,12 @@ AnyEvent::Gearman::Client - Gearman client for AnyEvent application
 =head1 SYNOPSIS
 
     use AnyEvent::Gearman::Client;
-    
+
     # create greaman client
     my $gearman = AnyEvent::Gearman::Client->new(
         job_servers => ['127.0.0.1', '192.168.0.1:123'],
     );
-    
+
     # start job
     $gearman->add_task(
         $function => $workload,
@@ -99,12 +115,12 @@ AnyEvent::Gearman::Client - Gearman client for AnyEvent application
             # job failed
         },
     );
-    
+
     # start background job
     $gearman->add_task_bg(
         $function => $workload,
     );
-    
+
 
 =head1 DESCRIPTION
 
