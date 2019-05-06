@@ -1,6 +1,7 @@
 package AnyEvent::Gearman::Connection;
 use Any::Moose;
 use Scalar::Util 'weaken';
+use Socket;
 
 use AnyEvent::Socket;
 use AnyEvent::Handle;
@@ -88,7 +89,8 @@ sub connect {
         my ($fh) = @_;
 
         if ($fh) {
-            my $handle = AnyEvent::Handle->new(
+	     setsockopt($fh, SOL_SOCKET, SO_KEEPALIVE, 1) or warn "setsockopt() failed: $!";
+	     my $handle = AnyEvent::Handle->new(
                 fh       => $fh,
                 on_read  => sub { $self->process_packet },
                 on_error => sub {
