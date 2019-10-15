@@ -1,4 +1,5 @@
 language: perl
+dist: trusty # to support older perls as Xenial only supports 5.22+
 perl:
   - "5.26"
   - "5.24"
