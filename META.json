@@ -14,6 +14,15 @@
    },
    "name" : "AnyEvent-Gearman",
    "prereqs" : {
+      "develop" : {
+         "requires" : {
+            "Module::Install":"0",
+            "Module::Install::ExtraTests":"0",
+            "Module::Install::AuthorTests":"0",
+            "Module::Install::TestBase":"0",
+            "Module::Install::Repository":"0"
+         }
+      },
       "runtime" : {
          "requires" : {
             "AnyEvent":"5.12",
