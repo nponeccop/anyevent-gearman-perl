@@ -47,7 +47,7 @@ install:
 # chcp without parameter, we can see that locale is 437 instead of 65001 which means
 # some version of 8-bit European charset instead of UTF-8 required by some modules of
 # Japanese origin
-  - chcp 65001 && cpanm Test::Simple NML/Danga-Socket-1.62_01-TRIAL.tar.gz NML/Proc-Guard-0.07_01.tar.gz
+  - chcp 65001 && cpanm NML/Danga-Socket-1.62_01-TRIAL.tar.gz NML/Proc-Guard-0.07_01.tar.gz
 # Gearman-Server fails tests under Windows
 # and AnyEvent::Gearman fails tests too if Gearman::Server is installed
 # without testing
