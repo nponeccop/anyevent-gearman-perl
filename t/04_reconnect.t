@@ -16,6 +16,7 @@ my $port = empty_port;
 my $client;
 my $round = 1;
 sub run_tests {
+    wait_port $port;
     $client ||= AnyEvent::Gearman::Client->new(
         job_servers => ['127.0.0.1:' . $port],
     );
