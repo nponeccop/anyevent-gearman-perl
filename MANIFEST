@@ -17,10 +17,7 @@ inc/Test/Base.pm
 inc/Test/Base/Filter.pm
 inc/Test/Builder.pm
 inc/Test/Builder/Module.pm
-inc/Test/Deep.pm
-inc/Test/Exception.pm
 inc/Test/More.pm
-inc/Test/TCP.pm
 lib/AnyEvent/Gearman.pm
 lib/AnyEvent/Gearman/Client.pm
 lib/AnyEvent/Gearman/Client/Connection.pm
