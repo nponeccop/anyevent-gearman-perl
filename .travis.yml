@@ -13,6 +13,3 @@ before_install:
   - cpanm --quiet --notest Module::Install::AuthorTests Module::Install::TestBase Module::Install::Repository Gearman::Server Gearman::Worker Test::Spelling Test::Pod::Coverage
 script:
   - cpanm -v --test-only .
-  - make distcheck
-  - make dist
-  - cpanm AnyEvent-Gearman-*.tar.gz

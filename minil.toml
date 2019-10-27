@@ -1,0 +1,7 @@
+name = "AnyEvent-Gearman"
+# badges = ["travis-ci.com"]
+authority="cpan:NML"
+
+module_maker="ModuleBuildTiny"
+static_install = "auto"
+

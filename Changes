@@ -1,5 +1,7 @@
 Revision history for Perl extension AnyEvent::Gearman
 
+{{$NEXT}}
+
 0.10  2013-02-05T11:14:40
       - Fix memory leak (patch by athomason@github)
 

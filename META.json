@@ -4,7 +4,7 @@
       "Daisuke Murase <typester@cpan.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "gen-cpan-meta version 0.009",
+   "generated_by" : "Minilla/v3.1.7, CPAN::Meta::Converter version 2.150010",
    "license" : [
       "perl_5"
    ],
@@ -13,36 +13,91 @@
       "version" : 2
    },
    "name" : "AnyEvent-Gearman",
+   "no_index" : {
+      "directory" : [
+         "t",
+         "xt",
+         "inc",
+         "share",
+         "eg",
+         "examples",
+         "author",
+         "builder"
+      ]
+   },
    "prereqs" : {
+      "build" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.36",
+            "Test::Deep" : "0",
+            "Test::Exception" : "0",
+            "Test::TCP" : "0.08"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "Module::Build::Tiny" : "0.035"
+         }
+      },
       "develop" : {
          "requires" : {
-            "Module::Install":"0",
-            "Module::Install::ExtraTests":"0",
-            "Module::Install::AuthorTests":"0",
-            "Module::Install::TestBase":"0",
-            "Module::Install::Repository":"0"
+            "Module::Install" : "0",
+            "Module::Install::AuthorTests" : "0",
+            "Module::Install::ExtraTests" : "0",
+            "Module::Install::Repository" : "0",
+            "Module::Install::TestBase" : "0",
+            "Test::CPAN::Meta" : "0",
+            "Test::MinimumVersion::Fast" : "0.04",
+            "Test::PAUSE::Permissions" : "0.07",
+            "Test::Pod" : "1.41",
+            "Test::Spellunker" : "v0.2.7"
          }
       },
       "runtime" : {
          "requires" : {
-            "AnyEvent":"5.12",
-            "Any::Moose":"0.13",
-            "Mouse":"0.80",
-            "MouseX::Foreign":"0",
-            "Object::Event":"1.0",
-            "Object::Container":"0.03002"
+            "Any::Moose" : "0.13",
+            "AnyEvent" : "5.12",
+            "Filter::Util::Call" : "0",
+            "Mouse" : "0.80",
+            "MouseX::Foreign" : "0",
+            "Object::Container" : "0.03002",
+            "Object::Event" : "1.0"
          }
       },
       "test" : {
          "requires" : {
-             "Test::More":"0.92",
-             "Test::Exception":"0",
-             "Test::Deep":"0",
-             "Test::Base":"0",
-             "Test::TCP":"0.08"
+            "Test::Base" : "0",
+            "Test::Deep" : "0",
+            "Test::Exception" : "0",
+            "Test::More" : "0.92",
+            "Test::TCP" : "0.08"
          }
       }
    },
-   "release_status" : "stable",
-   "version" : "0.10"
+   "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/nponeccop/anyevent-gearman-perl/issues"
+      },
+      "homepage" : "https://github.com/nponeccop/anyevent-gearman-perl",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/nponeccop/anyevent-gearman-perl.git",
+         "web" : "https://github.com/nponeccop/anyevent-gearman-perl"
+      }
+   },
+   "version" : "0.10",
+   "x_authority" : "cpan:NML",
+   "x_contributors" : [
+      "Adam Thomason <ad@mthomason.net>",
+      "Alex Kapranoff <alex@kapranoff.ru>",
+      "Andrii Melnykov <andy.melnikov@gmail.com>",
+      "David Steinbrunner <dsteinbrunner@pobox.com>",
+      "Garen Torikian <gjtorikian@gmail.com>",
+      "Graham Ollis <plicease@cpan.org>",
+      "Pedro Melo <melo@simplicidade.org>",
+      "perlancar (on pc-home) <perlancar@gmail.com>"
+   ],
+   "x_serialization_backend" : "JSON::PP version 4.02",
+   "x_static_install" : 1
 }
