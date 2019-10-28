@@ -74,7 +74,7 @@ __PACKAGE__->meta->make_immutable;
 
 __END__
 
-=for stopwords Str namespace
+=for stopwords Str namespace cb bg
 
 =head1 NAME
 
