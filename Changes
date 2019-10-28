@@ -1,6 +1,19 @@
 Revision history for Perl extension AnyEvent::Gearman
 
 {{$NEXT}}
+      - Strip prefix when doing function lookup
+      - Really unregister functions in worker
+      - Use SO_KEEPALIVE to prevent disconnections under NAT
+      - Fix concatenation in TCP on_error handler
+      - Fix building on Windows on older Perls
+      - Fix race condition in t/04_reconnect.t
+      - Migrate from ShipIt to minilla and from Module::Install to Module::Build::Tiny to
+        avoid problems arising from shipping partial Test::TCP and Test::Simple modules
+      - Add missing deps to package metadata
+      - Fix manifest errors
+      - Skip POD coverage tests on 5.18 and earlier
+      - Fix typos and pod_spelling test
+      - Document prefix on worker as public attribute
 
 0.10  2013-02-05T11:14:40
       - Fix memory leak (patch by athomason@github)
